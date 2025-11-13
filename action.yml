@@ -1,0 +1,38 @@
+name: "ExplainThisError CI"
+description: "Send build/test errors to ExplainThisError; get root cause + fixes; writes a step summary; can comment on PRs."
+author: "ExplainThisError"
+branding:
+  icon: "alert-triangle"
+  color: "purple"
+
+inputs:
+  error:
+    description: "The error text/log snippet to analyze"
+    required: true
+  api_key:
+    description: "Bearer key provisioned for GitHub CI (store as a secret)"
+    required: true
+  api_url:
+    description: "API endpoint"
+    required: false
+    default: "https://api.explainthiserror.com/ci/analyze"
+  comment_pr:
+    description: "Post a PR comment when on pull_request"
+    required: false
+    default: "true"
+  fail_on_api_error:
+    description: "Fail the step if the API call fails"
+    required: false
+    default: "false"
+
+outputs:
+  json:
+    description: "Raw JSON response from ExplainThisError"
+  root_cause_short:
+    description: "Root cause short summary if available"
+  root_cause_detail:
+    description: "Root cause detailed explanation if available"
+
+runs:
+  using: "node20"
+  main: "dist/index.js"
