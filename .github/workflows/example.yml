@@ -1,38 +1,31 @@
-name: "ExplainThisError example"
+name: ExplainThisError Demo
+
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
 
 jobs:
-  demo:
+  analyze:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Simulate a failing step
-        id: fail
-        continue-on-error: true
-        run: |
-          echo "Compiling..."
-          echo "::group::build"
-          echo "error: cannot find module './foo'"
-          echo "::endgroup::"
-          exit 1
-
-      - name: Analyze failure with ExplainThisError
-        if: steps.fail.outcome == 'failure'
-        uses: ./
+      - name: ExplainThisError
+        id: explain
+        uses: alaneldios/explainthiserror-action@v1
         with:
           error: |
-            error: cannot find module './foo'
-            at require (node:internal/modules/cjs/loader:985:15)
-          api_key: ${{ secrets.EXPLAINTHISERROR_API_KEY }}
+            PermissionError: [Errno 13] Permission denied: '/etc/shadow'
+          api_key: ghci_public_free_1
           api_url: https://api.explainthiserror.com/ci/analyze
           comment_pr: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_api_error: false
+
+      - name: Use outputs
+        run: |
+          printf 'Short: %s\n' "${{ steps.explain.outputs.root_cause_short }}"
+          echo 'Detail:'
+          printf '%s\n' "${{ steps.explain.outputs.root_cause_detail }}"
