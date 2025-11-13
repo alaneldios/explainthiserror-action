@@ -37,7 +37,7 @@ Analyze failing logs and CI errors using [ExplainThisError](https://explainthise
        uses: your-org-or-user/explainthiserror-action@v1
        with:
          error: ${{ steps.build.outputs.error || '...' }}
-         api_key: ${{ secrets.EXPLAINTHISERROR_API_KEY }}
+         api_key: ghci_public_free_1
      ```
    - Provide any error/log snippet you want analyzed.
 
