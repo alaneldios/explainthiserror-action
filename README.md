@@ -6,7 +6,7 @@ Analyze failing logs and CI errors using [ExplainThisError](https://explainthise
 
 - `error` **required** – Error text or log snippet.
 - `api_key` **required** – CI bearer key. Store as a repository secret.
-- `api_url` optional – Default: `https://api.explainthiserror.com/ci/analyze`.
+- `api_url` **required** – Default: `https://api.explainthiserror.com/ci/analyze`.
 - `comment_pr` optional – Post a PR comment when on `pull_request` (default: `true`).
 - `fail_on_api_error` optional – Fail the step if the API call fails (default: `false`).
 
